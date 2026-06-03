@@ -1,0 +1,1178 @@
+{
+  "info": {
+    "_postman_id": "goman-api-collection-v1",
+    "name": "Goman API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://goman-api.test", "type": "string" },
+    { "key": "admin_token", "value": "", "type": "string" },
+    { "key": "user_token", "value": "", "type": "string" },
+    { "key": "category_ulid", "value": "", "type": "string" },
+    { "key": "sub_category_ulid", "value": "", "type": "string" },
+    { "key": "event_ulid", "value": "", "type": "string" },
+    { "key": "deposit_ulid", "value": "", "type": "string" },
+    { "key": "withdrawal_ulid", "value": "", "type": "string" },
+    { "key": "user_ulid", "value": "", "type": "string" },
+    { "key": "order_ulid", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.token) {",
+                      "    pm.collectionVariables.set('admin_token', json.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\",\n  \"device_name\": \"postman\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "auth", "login"]
+                }
+              }
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/auth/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "auth", "logout"]
+                }
+              }
+            },
+            {
+              "name": "Me",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/auth/me",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "auth", "me"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "List Categories",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories"]
+                }
+              }
+            },
+            {
+              "name": "Create Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.data && json.data.ulid) {",
+                      "    pm.collectionVariables.set('category_ulid', json.data.ulid);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Sports\",\n  \"slug\": \"sports\",\n  \"is_active\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories"]
+                }
+              }
+            },
+            {
+              "name": "Get Category",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories/{{category_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories", "{{category_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Sports Updated\",\n  \"is_active\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories/{{category_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories", "{{category_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories/{{category_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories", "{{category_ulid}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sub-Categories",
+          "item": [
+            {
+              "name": "List Sub-Categories",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories/{{category_ulid}}/sub-categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories", "{{category_ulid}}", "sub-categories"]
+                }
+              }
+            },
+            {
+              "name": "Create Sub-Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.data && json.data.ulid) {",
+                      "    pm.collectionVariables.set('sub_category_ulid', json.data.ulid);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Football\",\n  \"slug\": \"football\",\n  \"is_active\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/categories/{{category_ulid}}/sub-categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "categories", "{{category_ulid}}", "sub-categories"]
+                }
+              }
+            },
+            {
+              "name": "Update Sub-Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Football Updated\",\n  \"is_active\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/sub-categories/{{sub_category_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "sub-categories", "{{sub_category_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Sub-Category",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/sub-categories/{{sub_category_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "sub-categories", "{{sub_category_ulid}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Events",
+          "item": [
+            {
+              "name": "List Events",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events?status=&category=&page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events"],
+                  "query": [
+                    { "key": "status", "value": "", "description": "0=Pending, 1=Open, 2=Closed, 3=Settled" },
+                    { "key": "category", "value": "", "description": "Category ULID" },
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Event",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.data && json.data.ulid) {",
+                      "    pm.collectionVariables.set('event_ulid', json.data.ulid);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Will team A win the championship?\",\n  \"description\": \"A binary prediction market for the championship outcome.\",\n  \"sub_category_ulid\": \"{{sub_category_ulid}}\",\n  \"yes_initial_price\": \"0.5000\",\n  \"fee_rate\": \"0.0100\",\n  \"starts_at\": \"2026-06-01T00:00:00Z\",\n  \"ends_at\": \"2026-06-30T23:59:59Z\",\n  \"resolve_at\": \"2026-07-01T12:00:00Z\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events"]
+                }
+              }
+            },
+            {
+              "name": "Get Event",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Event",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Will team A win the championship? (Updated)\",\n  \"description\": \"Updated description.\",\n  \"fee_rate\": \"0.0200\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Event",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Open Event",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}/open",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}", "open"]
+                }
+              }
+            },
+            {
+              "name": "Close Event",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}/close",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}", "close"]
+                }
+              }
+            },
+            {
+              "name": "Settle Event",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"outcome\": \"yes\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}/settle",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}", "settle"]
+                }
+              }
+            },
+            {
+              "name": "Event Orders",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}/orders",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}", "orders"]
+                }
+              }
+            },
+            {
+              "name": "Event Trades",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}/trades",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}", "trades"]
+                }
+              }
+            },
+            {
+              "name": "Event Positions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/events/{{event_ulid}}/positions",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "events", "{{event_ulid}}", "positions"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deposits",
+          "item": [
+            {
+              "name": "List Deposits",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/deposits?status=&page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "deposits"],
+                  "query": [
+                    { "key": "status", "value": "", "description": "0=Pending, 1=Confirmed, 2=Rejected" },
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Deposit",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/deposits/{{deposit_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "deposits", "{{deposit_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Reject Deposit",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Transaction not found on blockchain.\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/deposits/{{deposit_ulid}}/reject",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "deposits", "{{deposit_ulid}}", "reject"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Withdrawals",
+          "item": [
+            {
+              "name": "List Withdrawals",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/withdrawals?status=&page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "withdrawals"],
+                  "query": [
+                    { "key": "status", "value": "", "description": "0=Pending, 1=Processing, 2=Done, 3=Failed" },
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Withdrawal",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/withdrawals/{{withdrawal_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "withdrawals", "{{withdrawal_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Approve Withdrawal",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/withdrawals/{{withdrawal_ulid}}/approve",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "withdrawals", "{{withdrawal_ulid}}", "approve"]
+                }
+              }
+            },
+            {
+              "name": "Reject Withdrawal",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Invalid destination address.\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/withdrawals/{{withdrawal_ulid}}/reject",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "withdrawals", "{{withdrawal_ulid}}", "reject"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "List Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users?page=1&is_active=&search=",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "is_active", "value": "", "description": "true or false" },
+                    { "key": "search", "value": "", "description": "Search by name or email" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get User",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users/{{user_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users", "{{user_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Activate User",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users/{{user_ulid}}/activate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users", "{{user_ulid}}", "activate"]
+                }
+              }
+            },
+            {
+              "name": "Deactivate User",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users/{{user_ulid}}/deactivate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users", "{{user_ulid}}", "deactivate"]
+                }
+              }
+            },
+            {
+              "name": "User Wallet",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users/{{user_ulid}}/wallet",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users", "{{user_ulid}}", "wallet"]
+                }
+              }
+            },
+            {
+              "name": "User Positions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users/{{user_ulid}}/positions",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users", "{{user_ulid}}", "positions"]
+                }
+              }
+            },
+            {
+              "name": "User Orders",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/users/{{user_ulid}}/orders",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "users", "{{user_ulid}}", "orders"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reports",
+          "item": [
+            {
+              "name": "Fee Report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/reports/fees?from=2026-01-01&to=2026-12-31&event_ulid=",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "reports", "fees"],
+                  "query": [
+                    { "key": "from", "value": "2026-01-01", "description": "Start date (Y-m-d)" },
+                    { "key": "to", "value": "2026-12-31", "description": "End date (Y-m-d)" },
+                    { "key": "event_ulid", "value": "", "description": "Filter by event ULID (optional)" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Trade Report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/reports/trades?from=2026-01-01&to=2026-12-31&event_ulid=&page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "reports", "trades"],
+                  "query": [
+                    { "key": "from", "value": "2026-01-01" },
+                    { "key": "to", "value": "2026-12-31" },
+                    { "key": "event_ulid", "value": "" },
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Wallet Report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/reports/wallets?page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "reports", "wallets"],
+                  "query": [
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "Register",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.token) {",
+                      "    pm.collectionVariables.set('user_token', json.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\",\n  \"device_name\": \"postman\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              }
+            },
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.token) {",
+                      "    pm.collectionVariables.set('user_token', json.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password\",\n  \"device_name\": \"postman\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              }
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "logout"]
+                }
+              }
+            },
+            {
+              "name": "Me",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/me",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "me"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Events (Public)",
+          "item": [
+            {
+              "name": "List Events",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/events?category=&sub_category=&page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "events"],
+                  "query": [
+                    { "key": "category", "value": "", "description": "Category ULID" },
+                    { "key": "sub_category", "value": "", "description": "Sub-category ULID" },
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Event",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/events/{{event_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "events", "{{event_ulid}}"]
+                }
+              }
+            },
+            {
+              "name": "Event Order Book",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/events/{{event_ulid}}/orderbook",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "events", "{{event_ulid}}", "orderbook"]
+                }
+              }
+            },
+            {
+              "name": "Event Trades",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/events/{{event_ulid}}/trades",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "events", "{{event_ulid}}", "trades"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Wallet",
+          "item": [
+            {
+              "name": "Get Balance",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/wallet/balance",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "wallet", "balance"]
+                }
+              }
+            },
+            {
+              "name": "Get Transactions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/wallet/transactions?page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "wallet", "transactions"],
+                  "query": [
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Deposit",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.data && json.data.ulid) {",
+                      "    pm.collectionVariables.set('deposit_ulid', json.data.ulid);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tx_id\": \"abc123def456blockchain789txhash\",\n  \"network\": \"TRC20\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/wallet/deposit",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "wallet", "deposit"]
+                }
+              }
+            },
+            {
+              "name": "Withdraw",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.data && json.data.ulid) {",
+                      "    pm.collectionVariables.set('withdrawal_ulid', json.data.ulid);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"100.00000000\",\n  \"network\": \"TRC20\",\n  \"destination_address\": \"TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n  \"memo\": null\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/wallet/withdraw",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "wallet", "withdraw"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Orders",
+          "item": [
+            {
+              "name": "List Orders",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/orders?page=1&status=&event_ulid=",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "orders"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "status", "value": "", "description": "0=Open, 1=Partial, 2=Filled, 3=Cancelled" },
+                    { "key": "event_ulid", "value": "" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Place Order",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var json = pm.response.json();",
+                      "if (json && json.data && json.data.ulid) {",
+                      "    pm.collectionVariables.set('order_ulid', json.data.ulid);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_ulid\": \"{{event_ulid}}\",\n  \"side\": \"yes\",\n  \"price\": \"0.6000\",\n  \"quantity\": \"10.00000000\",\n  \"idempotency_key\": \"order-unique-key-001\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/orders",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "orders"]
+                }
+              }
+            },
+            {
+              "name": "Cancel Order",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/orders/{{order_ulid}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "orders", "{{order_ulid}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Positions",
+          "item": [
+            {
+              "name": "List Positions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{user_token}}" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/positions?page=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "positions"],
+                  "query": [
+                    { "key": "page", "value": "1" }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

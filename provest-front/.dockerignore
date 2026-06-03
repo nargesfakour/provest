@@ -1,0 +1,23 @@
+# Dependencies — reinstalled inside Docker via npm ci
+node_modules/
+
+# Previous build output — rebuilt inside Docker
+dist/
+
+# Local environment overrides — .env.production is intentionally included
+.env.local
+.env.*.local
+
+# Git
+.git/
+.github/
+.gitignore
+
+# Documentation
+*.md
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
