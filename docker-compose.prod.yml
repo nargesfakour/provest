@@ -1,0 +1,95 @@
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — persistent database
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: provest-postgres
+    restart: always
+    environment:
+      POSTGRES_DB:       ${DB_DATABASE}
+      POSTGRES_USER:     ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - provest_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Laravel — PHP-FPM application
+  # env_file points to the single root .env.production so one file covers
+  # everything (both postgres credentials and all Laravel settings).
+  # ---------------------------------------------------------------------------
+  laravel:
+    build:
+      context: ./provest-api
+      dockerfile: Dockerfile
+    image: provest-laravel:latest
+    container_name: provest-laravel
+    restart: always
+    env_file: .env.production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - provest_net
+    healthcheck:
+      test: ["CMD", "php", "-r", "echo 1;"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # Queue worker — runs MatchOrdersJob + SettleEventJob
+  # Uses the same image as laravel; no extra Dockerfile needed.
+  # ---------------------------------------------------------------------------
+  queue:
+    image: provest-laravel:latest
+    container_name: provest-queue
+    restart: always
+    env_file: .env.production
+    command: ["php", "artisan", "queue:work",
+              "--tries=3", "--timeout=300", "--sleep=3", "--queue=default"]
+    depends_on:
+      laravel:
+        condition: service_healthy
+    networks:
+      - provest_net
+
+  # ---------------------------------------------------------------------------
+  # Nginx — serves React SPA + proxies /api/* to Laravel
+  # Multi-stage build: React is compiled inside the image, no Node container.
+  # Only this service exposes ports to the host.
+  # ---------------------------------------------------------------------------
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: provest-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      laravel:
+        condition: service_healthy
+    networks:
+      - provest_net
+
+# -----------------------------------------------------------------------------
+volumes:
+  postgres_data:
+
+networks:
+  provest_net:
+    driver: bridge
