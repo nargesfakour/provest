@@ -2,19 +2,30 @@
 # Stage 1 — Build the React + Vite frontend
 # Build context must be the project root (.) so both provest-front/ and
 # nginx/ are reachable.
+#
+# Uses node:20 (Debian/glibc) — NOT node:20-alpine — so that the
+# node_modules pre-installed on the host (also glibc) are binary-compatible.
+# Running npm ci inside Docker is skipped entirely; node_modules is COPY'd
+# from the local machine, which already has it installed.
 # =============================================================================
-FROM node:20-alpine AS frontend-builder
+FROM node:20 AS frontend-builder
 
 WORKDIR /build
 
-# Copy lockfiles first — npm install layer is cached until they change.
+# ── Source files (no node_modules yet) ───────────────────────────────────────
 COPY provest-front/package.json provest-front/package-lock.json ./
+COPY provest-front/index.html \
+     provest-front/vite.config.ts \
+     provest-front/postcss.config.js \
+     provest-front/tailwind.config.js \
+     provest-front/tsconfig.json \
+     provest-front/tsconfig.app.json \
+     provest-front/tsconfig.node.json \
+     provest-front/.env.production ./
+COPY provest-front/src ./src
 
-RUN npm ci --ignore-scripts
-
-# Copy the full frontend source.
-# .env.production is included here and Vite will use it automatically.
-COPY provest-front/ .
+# ── node_modules from host — no npm install inside Docker, no network needed ─
+COPY provest-front/node_modules ./node_modules
 
 RUN npm run build
 

@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
             ['email' => 'admin@provest.local'],
             [
                 'name'     => 'Super Admin',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('Abc1586173#'),
             ],
         );
     }

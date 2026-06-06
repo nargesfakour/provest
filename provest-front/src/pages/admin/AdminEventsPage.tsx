@@ -23,7 +23,7 @@ import Modal from '@/components/ui/Modal'
 import Pagination from '@/components/ui/Pagination'
 import Skeleton from '@/components/ui/Skeleton'
 import { formatDate } from '@/utils/date'
-import type { Event, EventStatus, SubCategory } from '@/types/domain'
+import type { Event } from '@/types/domain'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 

@@ -51,7 +51,7 @@ export default function EventsPage() {
     return events.filter(
       (e) =>
         e.title.toLowerCase().includes(q) ||
-        e.sub_category.toLowerCase().includes(q),
+        e.sub_category.name.toLowerCase().includes(q),
     )
   }, [events, search])
 

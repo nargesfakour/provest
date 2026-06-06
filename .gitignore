@@ -5,9 +5,12 @@
 # وابستگی‌ها — روی سرور نصب می‌شوند
 node_modules/
 vendor/
-
+provest-deploy/
 # فایل‌های سیستمی macOS
 .DS_Store
 
 # لاگ‌های داکر
 *.log
+make-package.sh
+provest-deploy.zip
+fix-docker-dns.sh

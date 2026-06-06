@@ -16,7 +16,8 @@ RUN composer install \
         --no-interaction \
         --no-autoloader \
         --no-scripts \
-        --prefer-dist
+        --prefer-dist \
+        --ignore-platform-req=ext-bcmath
 
 # Copy source so dump-autoload can find all classes.
 COPY . .

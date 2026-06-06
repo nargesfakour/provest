@@ -1,0 +1,42 @@
+# =============================================================================
+# Root .dockerignore — applies when build context is the project root (.)
+# Used by: nginx/Dockerfile
+# NOT used by: provest-api/Dockerfile  (its context is ./provest-api/)
+#
+# provest-front/node_modules is intentionally NOT excluded here.
+# The nginx/Dockerfile COPYs it directly to avoid running npm ci inside
+# the container (which requires network access).
+# =============================================================================
+
+# Backend — has its own build with ./provest-api as context
+provest-api/
+
+# Deploy artefacts — not needed for image build
+provest-deploy/
+
+# Git history
+.git/
+.github/
+
+# Root config/script files not needed inside the image
+docker-compose*.yml
+fix-docker-dns.sh
+make-package.sh
+deploy.sh
+.env
+.env.production
+.env.production.example
+.gitignore
+.dockerignore
+*.md
+
+# Frontend dev-only files (keep src/, node_modules/, .env.production)
+provest-front/.env.local
+provest-front/.env.*.local
+provest-front/.env
+provest-front/dist/
+provest-front/Dockerfile
+provest-front/.dockerignore
+provest-front/.gitignore
+provest-front/.claude/
+provest-front/CLAUDE-FRONTEND.md

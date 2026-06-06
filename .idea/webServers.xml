@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="38ee9e07-4778-485e-85ba-04a71bda1647" name="pro-arvan">
+        <fileTransfer rootFolder="/home/provest-deploy/api" accessType="SFTP" host="188.213.198.249" port="22" sshConfigId="9d74de63-b07f-478c-94bd-ccae9a7dbe92" sshConfig="ubuntu@37.152.183.205:22" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,88 @@
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — persistent database
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16
+    container_name: provest-postgres
+    restart: always
+    environment:
+      POSTGRES_DB:       ${DB_DATABASE}
+      POSTGRES_USER:     ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - provest_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Laravel — PHP-FPM application
+  # Pre-built image: provest-laravel:latest (loaded from provest-images.tar.gz)
+  # No build: directive — image must already exist on the host.
+  # ---------------------------------------------------------------------------
+  laravel:
+    image: provest-laravel:latest
+    container_name: provest-laravel
+    restart: always
+    env_file: .env.production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - provest_net
+    healthcheck:
+      test: ["CMD", "php", "-r", "echo 1;"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # Queue worker — same image as laravel, no build needed
+  # ---------------------------------------------------------------------------
+  queue:
+    image: provest-laravel:latest
+    container_name: provest-queue
+    restart: always
+    env_file: .env.production
+    command: ["php", "artisan", "queue:work",
+              "--tries=3", "--timeout=300", "--sleep=3", "--queue=default"]
+    depends_on:
+      laravel:
+        condition: service_healthy
+    networks:
+      - provest_net
+
+  # ---------------------------------------------------------------------------
+  # Nginx — serves React SPA + proxies /api/* to Laravel via FastCGI
+  # Pre-built image: provest-nginx:latest (has React dist baked in)
+  # HTTP only (port 80); offline.conf overrides the default SSL config.
+  # ---------------------------------------------------------------------------
+  nginx:
+    image: provest-nginx:latest
+    container_name: provest-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/offline.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      laravel:
+        condition: service_healthy
+    networks:
+      - provest_net
+
+# -----------------------------------------------------------------------------
+volumes:
+  postgres_data:
+
+networks:
+  provest_net:
+    driver: bridge
