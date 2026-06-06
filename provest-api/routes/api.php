@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Modules\Admin\Http\Controllers\AdminAuthController;
 use App\Modules\Admin\Http\Controllers\AdminDashboardController;
 use App\Modules\Admin\Http\Controllers\AdminDepositController;
+use App\Modules\Admin\Http\Controllers\AdminManagementController;
 use App\Modules\Admin\Http\Controllers\AdminReportController;
 use App\Modules\Admin\Http\Controllers\AdminWithdrawalController;
 use App\Modules\Admin\Http\Controllers\UserController;
@@ -88,6 +89,10 @@ Route::prefix('v1')->group(function () {
                 Route::get('balances', [AdminReportController::class, 'balances']);
                 Route::get('volume',   [AdminReportController::class, 'volume']);
             });
+
+            // Organizational admins
+            Route::get('admins',  [AdminManagementController::class, 'index']);
+            Route::post('admins', [AdminManagementController::class, 'store']);
 
             // Users
             Route::get('users',                       [UserController::class, 'index']);

@@ -6,6 +6,7 @@ namespace App\Modules\Auth\Http\Requests;
 
 use App\Modules\Auth\DTOs\UserRegisterDTO;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterUserRequest extends FormRequest
 {
@@ -19,7 +20,12 @@ class RegisterUserRequest extends FormRequest
         return [
             'name'        => ['required', 'string', 'max:255'],
             'email'       => ['required', 'email', 'unique:users,email'],
-            'password'    => ['required', 'string', 'min:8', 'confirmed'],
+            'password'    => [
+                'required',
+                'string',
+                'confirmed',
+                Password::min(8)->mixedCase()->numbers()->symbols(),
+            ],
             'device_name' => ['sometimes', 'string', 'max:255'],
         ];
     }

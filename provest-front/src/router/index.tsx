@@ -27,6 +27,7 @@ import AdminUserDetailPage from '@/pages/admin/AdminUserDetailPage'
 import AdminDepositsPage from '@/pages/admin/AdminDepositsPage'
 import AdminWithdrawalsPage from '@/pages/admin/AdminWithdrawalsPage'
 import AdminReportsPage from '@/pages/admin/AdminReportsPage'
+import AdminAdminsPage from '@/pages/admin/AdminAdminsPage'
 
 // Redirect authenticated users away from login/register
 function GuestGuard() {
@@ -115,6 +116,7 @@ export const router = createBrowserRouter([
           { path: 'deposits',         element: <AdminDepositsPage />     },
           { path: 'withdrawals',      element: <AdminWithdrawalsPage />  },
           { path: 'reports',          element: <AdminReportsPage />      },
+          { path: 'admins',           element: <AdminAdminsPage />       },
         ],
       },
     ],

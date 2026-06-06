@@ -68,9 +68,24 @@
       "emailInvalid": "ایمیل معتبر نیست",
       "passwordRequired": "رمز عبور الزامی است",
       "passwordMin": "رمز عبور باید حداقل ۸ کاراکتر باشد",
+      "passwordUppercase": "رمز عبور باید حداقل یک حرف بزرگ انگلیسی داشته باشد",
+      "passwordLowercase": "رمز عبور باید حداقل یک حرف کوچک انگلیسی داشته باشد",
+      "passwordNumber": "رمز عبور باید حداقل یک عدد داشته باشد",
+      "passwordSpecial": "رمز عبور باید حداقل یک کاراکتر خاص داشته باشد",
       "nameRequired": "نام الزامی است",
       "passwordMismatch": "رمزهای عبور مطابقت ندارند"
-    }
+    },
+    "passwordStrength": "قدرت رمز عبور",
+    "passwordStrengthWeak": "ضعیف",
+    "passwordStrengthFair": "متوسط",
+    "passwordStrengthGood": "خوب",
+    "passwordStrengthStrong": "قوی",
+    "passwordStrengthVeryStrong": "بسیار قوی",
+    "passwordReqLength": "حداقل ۸ کاراکتر",
+    "passwordReqUppercase": "حداقل یک حرف بزرگ انگلیسی",
+    "passwordReqLowercase": "حداقل یک حرف کوچک انگلیسی",
+    "passwordReqNumber": "حداقل یک عدد",
+    "passwordReqSpecial": "حداقل یک کاراکتر خاص"
   },
   "landing": {
     "hero": {
@@ -197,6 +212,7 @@
       "events": "ایونت‌ها",
       "categories": "دسته‌بندی‌ها",
       "users": "کاربران",
+      "admins": "کاربران سازمانی",
       "deposits": "واریزها",
       "withdrawals": "برداشت‌ها",
       "reports": "گزارش‌ها"
@@ -263,6 +279,16 @@
       "reject": "رد",
       "noWithdrawals": "برداشتی موجود نیست",
       "statuses": { "pending": "در انتظار", "processing": "در حال پردازش", "done": "انجام شده", "failed": "ناموفق" }
+    },
+    "admins": {
+      "title": "کاربران سازمانی",
+      "addAdmin": "افزودن ادمین",
+      "name": "نام",
+      "email": "ایمیل",
+      "joinDate": "تاریخ عضویت",
+      "noAdmins": "ادمینی موجود نیست",
+      "createTitle": "ثبت ادمین جدید",
+      "createSuccess": "ادمین جدید با موفقیت ثبت شد"
     },
     "reports": {
       "title": "گزارش‌ها",

@@ -8,6 +8,10 @@ use App\Modules\AbanTether\Services\AbanTetherService;
 use App\Modules\AbanTether\Services\AbanTetherServiceInterface;
 use App\Modules\Admin\Services\AdminAuthService;
 use App\Modules\Admin\Services\AdminAuthServiceInterface;
+use App\Modules\Admin\Repositories\AdminRepositoryInterface;
+use App\Modules\Admin\Repositories\EloquentAdminRepository;
+use App\Modules\Admin\Services\AdminManagementService;
+use App\Modules\Admin\Services\AdminManagementServiceInterface;
 use App\Modules\Admin\Services\AdminDashboardService;
 use App\Modules\Admin\Services\AdminDashboardServiceInterface;
 use App\Modules\Admin\Services\AdminReportService;
@@ -71,6 +75,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(AbanTetherServiceInterface::class, AbanTetherService::class);
         $this->app->bind(AdminAuthServiceInterface::class, AdminAuthService::class);
+        $this->app->bind(AdminRepositoryInterface::class, EloquentAdminRepository::class);
+        $this->app->bind(AdminManagementServiceInterface::class, AdminManagementService::class);
         $this->app->bind(UserAuthServiceInterface::class, UserAuthService::class);
 
         $this->app->bind(CategoryRepositoryInterface::class, EloquentCategoryRepository::class);

@@ -68,9 +68,24 @@
       "emailInvalid": "Invalid email address",
       "passwordRequired": "Password is required",
       "passwordMin": "Password must be at least 8 characters",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordNumber": "Password must contain at least one number",
+      "passwordSpecial": "Password must contain at least one special character",
       "nameRequired": "Name is required",
       "passwordMismatch": "Passwords do not match"
-    }
+    },
+    "passwordStrength": "Password Strength",
+    "passwordStrengthWeak": "Weak",
+    "passwordStrengthFair": "Fair",
+    "passwordStrengthGood": "Good",
+    "passwordStrengthStrong": "Strong",
+    "passwordStrengthVeryStrong": "Very Strong",
+    "passwordReqLength": "At least 8 characters",
+    "passwordReqUppercase": "At least one uppercase letter",
+    "passwordReqLowercase": "At least one lowercase letter",
+    "passwordReqNumber": "At least one number",
+    "passwordReqSpecial": "At least one special character"
   },
   "landing": {
     "hero": {
@@ -197,6 +212,7 @@
       "events": "Events",
       "categories": "Categories",
       "users": "Users",
+      "admins": "Organizational Users",
       "deposits": "Deposits",
       "withdrawals": "Withdrawals",
       "reports": "Reports"
@@ -263,6 +279,16 @@
       "reject": "Reject",
       "noWithdrawals": "No withdrawals",
       "statuses": { "pending": "Pending", "processing": "Processing", "done": "Done", "failed": "Failed" }
+    },
+    "admins": {
+      "title": "Organizational Users",
+      "addAdmin": "Add Admin",
+      "name": "Name",
+      "email": "Email",
+      "joinDate": "Join Date",
+      "noAdmins": "No admins found",
+      "createTitle": "Create New Admin",
+      "createSuccess": "New admin created successfully"
     },
     "reports": {
       "title": "Reports",
