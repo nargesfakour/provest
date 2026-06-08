@@ -2,13 +2,14 @@
 set -e
 echo "Starting deploy..."
 
-git pull origin main
+git pull origin master
 
 # اگر فایل .env.production وجود ندارد، از نمونه کپی می‌گیریم و می‌خواهیم پر شود
-[ ! -f .env.production ] && \
-  cp .env.production.example .env.production && \
-  echo "⚠️  Please fill .env.production then run again" && \
-  exit 1
+# Restore env from master copy
+if [ -f /home/.env.production.master ]; then
+  cp /home/.env.production.master .env.production
+  echo "✅ env restored from master"
+fi
 
 # APP_KEY باید پر باشد وگرنه Laravel اصلاً boot نمی‌کند
 APP_KEY_VAL=$(grep '^APP_KEY=' .env.production | cut -d= -f2-)

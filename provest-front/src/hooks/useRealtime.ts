@@ -18,17 +18,18 @@ let echoInstance: any = null
 function getEcho(): any {
   if (!echoInstance) {
     try {
+      const useTLS = import.meta.env.VITE_WS_TLS === 'true'
       echoInstance = new (Echo as any)({
-        broadcaster: 'pusher',
-        key: (import.meta.env.VITE_PUSHER_APP_KEY as string) || 'local',
-        cluster: 'mt1',
-        wsHost: (import.meta.env.VITE_WS_HOST as string) || 'provest-api.test',
-        wsPort: parseInt((import.meta.env.VITE_WS_PORT as string) || '6001'),
-        wssPort: parseInt((import.meta.env.VITE_WS_PORT as string) || '6001'),
-        forceTLS: false,
-        enabledTransports: ['ws'],
-        disableStats: true,
-        authEndpoint: `${(import.meta.env.VITE_API_BASE as string) || 'http://provest-api.test/api/v1'}/broadcasting/auth`,
+        broadcaster:       'pusher',
+        key:               import.meta.env.VITE_PUSHER_APP_KEY ?? 'provest-key',
+        cluster:           'mt1',
+        wsHost:            import.meta.env.VITE_WS_HOST ?? 'localhost',
+        wsPort:            parseInt(import.meta.env.VITE_WS_PORT ?? '6001'),
+        wssPort:           parseInt(import.meta.env.VITE_WS_PORT ?? '6001'),
+        forceTLS:          useTLS,
+        enabledTransports: useTLS ? ['wss'] : ['ws'],
+        disableStats:      true,
+        authEndpoint:      `${import.meta.env.VITE_API_BASE}/broadcasting/auth`,
         auth: {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token ?? ''}`,

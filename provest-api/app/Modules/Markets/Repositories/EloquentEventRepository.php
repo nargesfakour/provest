@@ -15,6 +15,11 @@ class EloquentEventRepository implements EventRepositoryInterface
         return Event::find($id);
     }
 
+    public function findByIdForUpdate(int $id): ?Event
+    {
+        return Event::where('id', $id)->lockForUpdate()->first();
+    }
+
     public function findByUlid(string $ulid): ?Model
     {
         return Event::with(['subCategory.category', 'creator'])

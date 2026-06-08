@@ -61,6 +61,26 @@ services:
       - provest_net
 
   # ---------------------------------------------------------------------------
+  # Soketi — self-hosted Pusher-compatible WebSocket server
+  # Pre-pulled image loaded from provest-images.tar.gz
+  # No ports exposed to host; nginx proxies /app/* to it internally.
+  # ---------------------------------------------------------------------------
+  soketi:
+    ports:
+      - "6001:6001"
+    image: quay.io/soketi/soketi:latest-16-alpine
+    container_name: provest-soketi
+    restart: unless-stopped
+    environment:
+      SOKETI_DEBUG: "0"
+      SOKETI_DEFAULT_APP_ID: "provest"
+      SOKETI_DEFAULT_APP_KEY: "provest-key"
+      SOKETI_DEFAULT_APP_SECRET: "provest-secret-change-this"
+      SOKETI_DEFAULT_APP_MAX_CONNS: "100"
+    networks:
+      - provest_net
+
+  # ---------------------------------------------------------------------------
   # Nginx — serves React SPA + proxies /api/* to Laravel via FastCGI
   # Pre-built image: provest-nginx:latest (has React dist baked in)
   # HTTP only (port 80); offline.conf overrides the default SSL config.

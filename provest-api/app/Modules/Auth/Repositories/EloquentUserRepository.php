@@ -21,6 +21,11 @@ class EloquentUserRepository implements UserRepositoryInterface
         return User::where('ulid', $ulid)->first();
     }
 
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
+    }
+
     public function paginate(int $perPage = 20): LengthAwarePaginator
     {
         return User::latest()->paginate($perPage);

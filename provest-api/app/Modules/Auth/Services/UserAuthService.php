@@ -9,14 +9,20 @@ use App\Modules\Auth\DTOs\UserLoginDTO;
 use App\Modules\Auth\DTOs\UserRegisterDTO;
 use App\Modules\Auth\Enums\UserStatus;
 use App\Modules\Auth\Models\User;
+use App\Modules\Auth\Repositories\UserRepositoryInterface;
 use App\Modules\Shared\Exceptions\BusinessException;
 use Illuminate\Support\Facades\Hash;
 
 class UserAuthService implements UserAuthServiceInterface
 {
+    public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
+    ) {}
+
     public function register(UserRegisterDTO $dto): UserAuthResultDTO
     {
-        $user = User::create([
+        /** @var User $user */
+        $user = $this->userRepository->create([
             'name'     => $dto->name,
             'email'    => $dto->email,
             'password' => $dto->password,
@@ -29,7 +35,7 @@ class UserAuthService implements UserAuthServiceInterface
 
     public function login(UserLoginDTO $dto): UserAuthResultDTO
     {
-        $user = User::where('email', $dto->email)->first();
+        $user = $this->userRepository->findByEmail($dto->email);
 
         if (!$user || !Hash::check($dto->password, $user->password)) {
             throw new BusinessException('Invalid credentials.', 401);

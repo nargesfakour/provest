@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Settlement\Services;
 
 use App\Modules\Markets\Enums\EventOutcome;
-use App\Modules\Markets\Models\Event;
+use App\Modules\Markets\Repositories\EventRepositoryInterface;
 use App\Modules\Orders\Enums\OrderSide;
 use App\Modules\Orders\Enums\OrderStatus;
 use App\Modules\Orders\Repositories\OrderRepositoryInterface;
@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 class SettlementService implements SettlementServiceInterface
 {
     public function __construct(
+        private readonly EventRepositoryInterface      $eventRepo,
         private readonly OrderRepositoryInterface      $orderRepo,
         private readonly PositionRepositoryInterface   $positionRepo,
         private readonly SettlementRepositoryInterface $settlementRepo,
@@ -32,8 +33,7 @@ class SettlementService implements SettlementServiceInterface
 
         DB::transaction(function () use ($eventId, $outcome, &$eventUlid): void {
             // Lock the event row — blocks any concurrent settlement attempt for the same event
-            /** @var Event|null $event */
-            $event = Event::where('id', $eventId)->lockForUpdate()->first();
+            $event = $this->eventRepo->findByIdForUpdate($eventId);
 
             if ($event === null) {
                 return;

@@ -20,6 +20,11 @@ class EloquentAdminRepository implements AdminRepositoryInterface
         return Admin::where('ulid', $ulid)->first();
     }
 
+    public function findByEmail(string $email): ?Admin
+    {
+        return Admin::where('email', $email)->first();
+    }
+
     public function paginate(int $perPage = 20): LengthAwarePaginator
     {
         return Admin::latest()->paginate($perPage);

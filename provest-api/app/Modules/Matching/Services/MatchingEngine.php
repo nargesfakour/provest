@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Matching\Services;
 
 use App\Modules\Markets\Enums\EventStatus;
-use App\Modules\Markets\Models\Event;
+use App\Modules\Markets\Repositories\EventRepositoryInterface;
 use App\Modules\Orders\Enums\OrderSide;
 use App\Modules\Orders\Enums\OrderStatus;
 use App\Modules\Orders\Repositories\OrderRepositoryInterface;
@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class MatchingEngine implements MatchingEngineInterface
 {
     public function __construct(
+        private readonly EventRepositoryInterface    $eventRepo,
         private readonly OrderRepositoryInterface    $orderRepo,
         private readonly TradeRepositoryInterface    $tradeRepo,
         private readonly PositionRepositoryInterface $positionRepo,
@@ -29,8 +30,7 @@ class MatchingEngine implements MatchingEngineInterface
         $executed = [];
 
         DB::transaction(function () use ($eventId, &$executed): void {
-            /** @var Event|null $event */
-            $event = Event::where('id', $eventId)->lockForUpdate()->first();
+            $event = $this->eventRepo->findByIdForUpdate($eventId);
 
             if ($event === null || $event->status !== EventStatus::Open) {
                 return;
